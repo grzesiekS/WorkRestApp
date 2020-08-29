@@ -18,10 +18,12 @@ class App extends React.Component {
 
   changeAppStatusWork = () => {
     this.setState({ appStatus: 'work' });
+    this.setState({ minutes: 1200, seconds: 60 });
   }
 
   changeAppStatusRest = () => {
     this.setState({ appStatus: 'rest' });
+    this.setState({ minutes: 20, seconds: 20 });
   }
 
   changeAppStatusOff = () => {
@@ -33,10 +35,15 @@ class App extends React.Component {
     const actualSeconds = this.state.seconds - substraction;
 
     this.setState({ minutes: actualMinutes });
-    if(actualSeconds <= 0) {
+
+    if (actualMinutes <= 0 && actualSeconds <= 0 && this.state.appStatus === 'work') {
+      this.changeAppStatusRest();
+    } else if (actualMinutes <= 0 && actualSeconds <= 0 && this.state.appStatus === 'rest') {
+      this.changeAppStatusWork();
+    } else if(actualSeconds <= 0) {
       this.setState({ seconds: 60 });
     } else {
-      this.setState({ seconds: actualSeconds })
+      this.setState({ seconds: actualSeconds });
     }
   }
 
