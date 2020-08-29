@@ -12,19 +12,18 @@ class App extends React.Component {
 
   state ={
     appStatus: 'off',
-    minutes: 1200,
-    seconds: 60,
+    timer: 1200,
     audio: new Audio('./sounds/bell.wav'),
   }
 
   changeAppStatusWork = () => {
     this.setState({ appStatus: 'work' });
-    this.setState({ minutes: 1200, seconds: 60 });
+    this.setState({ timer: 1200 });
   }
 
   changeAppStatusRest = () => {
     this.setState({ appStatus: 'rest' });
-    this.setState({ minutes: 20, seconds: 20 });
+    this.setState({ timer: 20 });
   }
 
   changeAppStatusOff = () => {
@@ -36,25 +35,24 @@ class App extends React.Component {
   };
 
   changeTimerStatus = substraction => {
-    const actualMinutes = this.state.minutes - substraction;
-    const actualSeconds = this.state.seconds - substraction;
+    const actualMinutes = this.state.timer - substraction;
 
-    this.setState({ minutes: actualMinutes });
+    this.setState({ timer: actualMinutes });
 
-    if (actualMinutes <= 0 && actualSeconds <= 0 && this.state.appStatus === 'work') {
+    if (actualMinutes <= 0 && this.state.appStatus === 'work') {
       this.changeAppStatusRest();
       this.playAudio();
-    } else if (actualMinutes <= 0 && actualSeconds <= 0 && this.state.appStatus === 'rest') {
+    } else if (actualMinutes <= 0 && this.state.appStatus === 'rest') {
       this.changeAppStatusWork();
       this.playAudio();
-    } else if(actualSeconds <= 0) {
-      this.setState({ seconds: 60 });
-    } else {
-      this.setState({ seconds: actualSeconds });
     }
   }
 
-  timeFormat = (minutes, seconds) => `${Math.floor(minutes/60) < 10 ? '0' + Math.floor(minutes/60) : Math.floor(minutes/60)}:${seconds < 10 ? '0' + seconds : seconds === 60 ? '00' : seconds}`;
+  timeFormat = (timer) => (
+  `${Math.floor(timer/60) < 10 ? '0' + Math.floor(timer/60) : Math.floor(timer/60)}
+  :
+  ${timer%60 < 10 ? '0' + timer%60 : timer%60 === 60 ? '00' : timer%60}`
+  );
 
   render() {
 
@@ -73,7 +71,7 @@ class App extends React.Component {
         {this.state.appStatus === 'work' ? <img src="./images/work.png" /> : null}
         {this.state.appStatus === 'rest' ? <img src="./images/rest.png" /> : null}
 
-        {this.state.appStatus !== 'off' ? <div className="timer">{this.timeFormat(this.state.minutes, this.state.seconds)}</div> : null}
+        {this.state.appStatus !== 'off' ? <div className="timer">{this.timeFormat(this.state.timer)}</div> : null}
         
         {this.state.appStatus === 'off' ? <button className="btn" onClick={() => this.changeAppStatusWork()}>Start</button> : null}
         {this.state.appStatus !== 'off' ? <button className="btn" onClick={() => this.changeAppStatusOff()}>Stop</button> : null}
