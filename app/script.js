@@ -14,6 +14,7 @@ class App extends React.Component {
     appStatus: 'off',
     minutes: 1200,
     seconds: 60,
+    audio: new Audio('./sounds/bell.wav'),
   }
 
   changeAppStatusWork = () => {
@@ -30,6 +31,10 @@ class App extends React.Component {
     this.setState({ appStatus: 'off' });
   }
 
+  playAudio = () => {
+    this.state.audio.play();
+  };
+
   changeTimerStatus = substraction => {
     const actualMinutes = this.state.minutes - substraction;
     const actualSeconds = this.state.seconds - substraction;
@@ -38,8 +43,10 @@ class App extends React.Component {
 
     if (actualMinutes <= 0 && actualSeconds <= 0 && this.state.appStatus === 'work') {
       this.changeAppStatusRest();
+      this.playAudio();
     } else if (actualMinutes <= 0 && actualSeconds <= 0 && this.state.appStatus === 'rest') {
       this.changeAppStatusWork();
+      this.playAudio();
     } else if(actualSeconds <= 0) {
       this.setState({ seconds: 60 });
     } else {
