@@ -2,9 +2,18 @@ import React from 'react';
 import { render } from 'react-dom';
 
 class App extends React.Component {
+  constructor() {
+    super();
+    
+    setInterval(() => {
+      if(this.state.appStatus !== 'off') this.changeTimerStatus(1);
+    }, 1000);
+  }
+
   state ={
     appStatus: 'off',
-    timer: 20,
+    minutes: 1200,
+    seconds: 60,
   }
 
   changeAppStatusWork = () => {
@@ -19,12 +28,22 @@ class App extends React.Component {
     this.setState({ appStatus: 'off' });
   }
 
+  changeTimerStatus = substraction => {
+    const actualMinutes = this.state.minutes - substraction;
+    const actualSeconds = this.state.seconds - substraction;
+
+    this.setState({ minutes: actualMinutes });
+    if(actualSeconds <= 0) {
+      this.setState({ seconds: 60 });
+    } else {
+      this.setState({ seconds: actualSeconds })
+    }
+  }
+
+  timeFormat = (minutes, seconds) => `${Math.floor(minutes/60) < 10 ? '0' + Math.floor(minutes/60) : Math.floor(minutes/60)}:${seconds < 10 ? '0' + seconds : seconds === 60 ? '00' : seconds}`;
+
   render() {
 
-    setInterval(() => {
-      console.log('test');
-    }, 1000);
-    
     return (
       <div>
         <h1>Protect your eyes</h1>
@@ -40,7 +59,7 @@ class App extends React.Component {
         {this.state.appStatus === 'work' ? <img src="./images/work.png" /> : null}
         {this.state.appStatus === 'rest' ? <img src="./images/rest.png" /> : null}
 
-        {this.state.appStatus !== 'off' ? <div className="timer">18:23</div> : null}
+        {this.state.appStatus !== 'off' ? <div className="timer">{this.timeFormat(this.state.minutes, this.state.seconds)}</div> : null}
         
         {this.state.appStatus === 'off' ? <button className="btn" onClick={() => this.changeAppStatusWork()}>Start</button> : null}
         {this.state.appStatus !== 'off' ? <button className="btn" onClick={() => this.changeAppStatusOff()}>Stop</button> : null}
