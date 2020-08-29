@@ -77,7 +77,7 @@ class App extends React.Component {
         
         {this.state.appStatus === 'off' ? <button className="btn" onClick={() => this.changeAppStatusWork()}>Start</button> : null}
         {this.state.appStatus !== 'off' ? <button className="btn" onClick={() => this.changeAppStatusOff()}>Stop</button> : null}
-        <button className="btn btn-close">X</button>
+        <button className="btn btn-close" onClick={() => window.close()}>X</button>
       </div>
     )
   }
